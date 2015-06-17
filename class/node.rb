@@ -26,4 +26,18 @@ class Node
     print "#{self.code}: "
     self.arcs.each { |a| print "#{a.weigth} "}
   end
+
+  def active?
+    free = repetitions - visited
+    if free >= 0
+      return true
+    elsif free == -1 && repetitions != 0
+      return true
+    elsif (free == -2 && ([2,4,5].include?(repetitions))) || repetitions > 5
+      return true
+    else
+      return false
+    end
+  end
+
 end

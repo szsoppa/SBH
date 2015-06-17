@@ -48,6 +48,10 @@ class Graph
     end
   end
 
+  def ant_colony
+    greedy(nodes, 'bccc', n)
+  end
+
   private
 
   def assign_node(code)

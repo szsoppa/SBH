@@ -5,4 +5,4 @@ graph.initialize_graph 'dane'
 graph.build_arcs
 graph.sort_arcs
 graph.show
-
+graph.ant_colony
