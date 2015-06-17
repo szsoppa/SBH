@@ -1,9 +1,10 @@
 require_relative 'arc'
 
 class Node
-  attr_accessor :repetitions, :visited, :arcs
+  attr_accessor :repetitions, :visited, :arcs, :code
 
-  def initialize
+  def initialize(code)
+    self.code = code
     self.visited = 0
     self.repetitions = 0
     self.arcs = Array.new

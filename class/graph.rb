@@ -1,6 +1,8 @@
 require_relative 'node'
+require_relative 'algorithm'
 
 class Graph
+  include Algorithm
   attr_accessor :nodes, :n, :l
 
   def initialize
@@ -10,14 +12,11 @@ class Graph
   end
 
   def initialize_graph(path)
-    File.open('../data/'+path, 'r') do |f|
+    File.open('data/'+path, 'r') do |f|
       f.each_line do |line|
-        line.delete(' ')
-        if self.l.zero?
-          self.l = line.length
-        else
-          return false if self.l != line.length
-        end
+        line.delete!("\n")
+        self.l = line.length if self.l.zero?
+        return false if self.l != line.length
         assign_node(line)
         self.n += 1
       end
@@ -30,15 +29,21 @@ class Graph
         next if key1 == key2
         weight = get_match(key1, key2)
         next if weight.zero?
-        nodes[key1].add_arc(Arc.new(weight,key2))
+        nodes[key1].add_arc(Arc.new(weight,nodes[key2]))
       end
+    end
+  end
+
+  def sort_arcs
+    self.nodes.each do |key, value|
+      value.arcs.sort! {|x,y| y.weight <=> x.weight}
     end
   end
 
   def show
     self.nodes.each do |key, value|
-      print key + ': '
-      value.arcs.each { |v| print "#{x.successor}(#{v.weight}) "}
+      print "#{value.code}: "
+      value.arcs.each { |v| print "#{v.successor.code}(#{v.weight}) "}
       puts ''
     end
   end
@@ -49,14 +54,14 @@ class Graph
     if nodes.has_key?(code)
       self.nodes[code].increment_repetitions
     else
-      self.nodes[code] = Node.new
+      self.nodes[code] = Node.new(code)
     end
   end
 
   def get_match(oligo1, oligo2)
     for i in (0..oligo1.length-1) do
       if oligo1[i..-1] == oligo2[0..(oligo2.length-i-1)]
-        return oligo1[i..-1]
+        return oligo1[i..-1].length
       end
     end
     return 0
