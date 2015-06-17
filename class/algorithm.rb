@@ -3,6 +3,7 @@ module Algorithm
   def greedy(nodes, start, n)
     cost = 0
     path = []
+    visited_arcs = []
     node = nodes[start]
     l = node.code.length
     len_n = 1
@@ -11,6 +12,7 @@ module Algorithm
     while cost < n do
       arc = choose_next_arc(node)
       return [] if arc.nil?
+      visited_arcs << arc
       len_n += 1
       path_weight += arc.weight
       path << nodes[arc.successor.code].code
@@ -19,6 +21,7 @@ module Algorithm
       node.visited += 1
     end
     if cost == n && path.all? {|n| nodes[n].proper? }
+      visited_arcs.each {|x| x.pheromone += 0.05}
       return path
     else
       return []

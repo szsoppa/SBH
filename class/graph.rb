@@ -1,6 +1,8 @@
 require_relative 'node'
 require_relative 'algorithm'
 
+$ANT_LOOP = 10000
+
 class Graph
   include Algorithm
   attr_accessor :nodes, :n, :l, :start_node
@@ -59,17 +61,31 @@ class Graph
   end
 
   def ant_colony
-    x = greedy(nodes, self.start_node, self.n)
-    sequence = ''
-    x.each do |oligo|
-      if sequence.length == 0
-        sequence += oligo
-        next
+    best_sequence = ''
+    best_score = 10000
+    for i in (1..$ANT_LOOP) do
+      x = greedy(nodes, self.start_node, self.n)
+      sequence = ''
+      x.each do |oligo|
+        if sequence.length == 0
+          sequence += oligo
+          next
+        end
+        match = get_match(sequence[sequence.length-self.l..-1], oligo)
+        sequence += oligo[match..-1]
       end
-      match = get_match(sequence[sequence.length-self.l..-1], oligo)
-      sequence += oligo[match..-1]
+      if sequence != ''
+        score = 0
+        x.each{|oligo| score += (nodes[oligo].repetitions - nodes[oligo].visited)}
+        if best_score.abs > score.abs
+          best_score = score
+          best_sequence = sequence
+        end
+      end
+      #puts sequence if sequence != ''
+      self.nodes.each { |key, value| value.visited = 0 }
     end
-    puts sequence if sequence != ''
+    best_sequence
   end
 
   private
