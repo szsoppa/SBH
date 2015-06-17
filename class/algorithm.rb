@@ -2,11 +2,24 @@ require 'pry'
 module Algorithm
   def greedy(nodes, start, n)
     cost = 0
+    path = []
     node = nodes[start]
-    while cost < 1 do
+    l = node.code.length
+    len_n = 1
+    path_weight = 0
+    path << node.code
+    while cost < n do
       arc = choose_next_arc(node)
-      puts arc.weight
-      cost+=1
+      len_n += 1
+      path_weight += arc.weight
+      path << nodes[arc.successor.code].code
+      cost = (len_n * l) - path_weight
+      node = arc.successor
+    end
+    if cost == n
+      return path
+    else
+      return []
     end
   end
 

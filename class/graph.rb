@@ -3,7 +3,7 @@ require_relative 'algorithm'
 
 class Graph
   include Algorithm
-  attr_accessor :nodes, :n, :l
+  attr_accessor :nodes, :n, :l, :start_node
 
   def initialize
     self.nodes = Hash.new
@@ -15,10 +15,20 @@ class Graph
     File.open('data/'+path, 'r') do |f|
       f.each_line do |line|
         line.delete!("\n")
+        self.start_node = line if self.l.zero?
         self.l = line.length if self.l.zero?
         return false if self.l != line.length
         assign_node(line)
-        self.n += 1
+      end
+    end
+  end
+
+  def read_sequence(path)
+    File.open('data/'+path, 'r') do |f|
+      f.each_line do |line|
+        line.delete!("\n")
+        self.n = line.length
+        self.start_node = line[0..3]
       end
     end
   end
@@ -49,7 +59,16 @@ class Graph
   end
 
   def ant_colony
-    greedy(nodes, 'bccc', n)
+    x = greedy(nodes, self.start_node, 15)
+    sequence = ''
+    x.each do |oligo|
+      if sequence.length == 0
+        sequence += oligo
+        next
+      end
+      match = get_match(sequence[sequence.length-4..-1], oligo)
+      sequence += oligo[match..-1]
+    end
   end
 
   private
@@ -69,5 +88,15 @@ class Graph
       end
     end
     return 0
+  end
+
+  def get_match_string(oligo1, oligo2)
+    puts "Porownuje #{oligo1} z #{oligo2}"
+    for i in (0..oligo1.length-1) do
+      if oligo1[i..-1] == oligo2[0..(oligo2.length-i-1)]
+        return oligo1[i..-1]
+      end
+    end
+    return ''
   end
 end
