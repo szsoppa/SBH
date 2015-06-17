@@ -110,26 +110,33 @@ def generate_sequence(sequence, spectrum)
   spectrum
 end
 
-while true do
-  spectrum = []
-  sequence = []
-  used_nucleotids = []
-  positive_errors = []
-  negative_errors = []
-  positive_errors = prepare_errors(used_nucleotids, l, p_errors)
-  used_nucleotids += positive_errors.collect {|key,val| key}
-  negative_errors = prepare_errors(used_nucleotids, l, n_errors)
-  positives_sequence = add_to_sequence_positives(positive_errors)
-  positives_spectrum = add_to_spectrum_positives(positives_sequence, positive_errors)
-  negatives_spectrum = add_to_spectrum_negatives(negative_errors)
-  negatives_sequence = add_to_sequence_negatives(negatives_spectrum, negative_errors)
 
-  sequence = negatives_sequence + positives_sequence
-  spectrum = positives_spectrum + negatives_spectrum
-  sequence.shuffle!
-  spectrum = generate_sequence(sequence, spectrum)
-  spectrum.shuffle!
+spectrum = []
+sequence = []
+used_nucleotids = []
+positive_errors = []
+negative_errors = []
+positive_errors = prepare_errors(used_nucleotids, l, p_errors)
+used_nucleotids += positive_errors.collect {|key,val| key}
+negative_errors = prepare_errors(used_nucleotids, l, n_errors)
+positives_sequence = add_to_sequence_positives(positive_errors)
+positives_spectrum = add_to_spectrum_positives(positives_sequence, positive_errors)
+negatives_spectrum = add_to_spectrum_negatives(negative_errors)
+negatives_sequence = add_to_sequence_negatives(negatives_spectrum, negative_errors)
 
-  sequence = sequence.join('')
-  puts "Sekwencja dlugosc: #{sequence.length} i ilosc wierzcholkow: #{spectrum.length}" if sequence.length == 80
-end
+sequence = negatives_sequence + positives_sequence
+spectrum = positives_spectrum + negatives_spectrum
+sequence.shuffle!
+spectrum = generate_sequence(sequence, spectrum)
+spectrum.shuffle!
+
+sequence = sequence.join('')
+file = File.open(Dir.getwd+'/data/sequence/'+sequence.length.to_s, 'w+')
+file.write sequence
+file.close
+file = File.open(Dir.getwd+'/data/spectrum/'+spectrum.size.to_s, 'w+')
+file.write spectrum.join("\n")
+file.close
+
+puts spectrum.inspect
+  #puts "Sekwencja dlugosc: #{sequence.length} i ilosc wierzcholkow: #{spectrum.length}" if sequence.length == 80

@@ -28,7 +28,7 @@ class Graph
       f.each_line do |line|
         line.delete!("\n")
         self.n = line.length
-        self.start_node = line[0..3]
+        self.start_node = line[0..self.l-1]
       end
     end
   end
@@ -59,16 +59,17 @@ class Graph
   end
 
   def ant_colony
-    x = greedy(nodes, self.start_node, 15)
+    x = greedy(nodes, self.start_node, self.n)
     sequence = ''
     x.each do |oligo|
       if sequence.length == 0
         sequence += oligo
         next
       end
-      match = get_match(sequence[sequence.length-4..-1], oligo)
+      match = get_match(sequence[sequence.length-self.l..-1], oligo)
       sequence += oligo[match..-1]
     end
+    puts sequence if sequence != ''
   end
 
   private
@@ -91,7 +92,6 @@ class Graph
   end
 
   def get_match_string(oligo1, oligo2)
-    puts "Porownuje #{oligo1} z #{oligo2}"
     for i in (0..oligo1.length-1) do
       if oligo1[i..-1] == oligo2[0..(oligo2.length-i-1)]
         return oligo1[i..-1]

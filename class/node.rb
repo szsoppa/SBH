@@ -6,7 +6,7 @@ class Node
   def initialize(code)
     self.code = code
     self.visited = 0
-    self.repetitions = 0
+    self.repetitions = 1
     self.arcs = Array.new
   end
 
@@ -40,4 +40,27 @@ class Node
     end
   end
 
+  def proper?
+    #print "Moje repetition: #{repetitions}, visited: #{visited}, "
+    free = repetitions - visited
+    if free < 0
+      #print "jest ok\n"
+      return true
+    elsif free == 0 || free == 1
+      #print "jest ok\n"
+      return true
+    elsif free == 2 && repetitions >= 3
+      #print "jest ok\n"
+      return true
+    elsif free == 3 && repetitions >= 5 && repetitions != 6
+      #print "jest ok\n"
+      return true
+    elsif free > 3 &&  visited >= 4
+      #print "jest ok\n"
+      return true
+    else
+      #print "jest lipa\n"
+      return false
+    end
+  end
 end

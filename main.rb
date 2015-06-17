@@ -1,9 +1,11 @@
 require_relative 'class/graph'
 
-graph = Graph.new
-graph.initialize_graph 'dane'
-graph.read_sequence 'sekwencja'
-graph.build_arcs
-graph.sort_arcs
-#graph.show
-graph.ant_colony
+while true do
+  graph = Graph.new
+  graph.initialize_graph 'spectrum/67'
+  graph.read_sequence 'sequence/340'
+  graph.build_arcs
+  graph.sort_arcs
+  #graph.show
+  graph.ant_colony
+end
