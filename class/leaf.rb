@@ -52,7 +52,7 @@ class Leaf
           tmp_error += 1
         end
       end
-      if tmp_error > (self.out.min*(max_length/f)*0.9) && self.out.min > 0
+      if tmp_error > self.out.min && self.out.min > 0
         self.alive = 0
         # print tmp_error
         # puts 'error cut'
@@ -69,7 +69,7 @@ class Leaf
 
 
 
-        if (f + 5*left) > max_length
+        if (f + 1*left) > max_length
           self.alive = 0
           # puts 'cut off'
           return
