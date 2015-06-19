@@ -10,11 +10,10 @@ $rand3_seq = [4, 5]
 
 
 
-n = ARGV[0].to_s.to_i # dlugosc sekwencji
-o = ARGV[1].to_s.to_i # ilosc oligo
-l = ARGV[2].to_s.to_i # dlugosc nukleotydu w spektrum
-p_errors = ARGV[3].to_s.to_i # liczba bledow pozytywnych
-n_errors = ARGV[4].to_s.to_i # liczba bledow negatywnych
+
+l = ARGV[0].to_s.to_i # dlugosc nukleotydu w spektrum
+p_errors = ARGV[1].to_s.to_i # liczba bledow pozytywnych
+n_errors = ARGV[2].to_s.to_i # liczba bledow negatywnych
 
 def get_oligo(l, used_nucleotids)
   oligo = ''
@@ -102,7 +101,7 @@ def generate_sequence(sequence, spectrum)
   l = sequence[0].length
   for i in (0..sequence.length-1) do
     next if i==0
-    cut = rand(1..9)
+    cut = rand(1..l-1)
     first = sequence[i-1][l-cut..-1]
     second = sequence[i][0..l-cut-1]
     spectrum << first+second
@@ -131,12 +130,12 @@ spectrum = generate_sequence(sequence, spectrum)
 spectrum.shuffle!
 
 sequence = sequence.join('')
-file = File.open(Dir.getwd+'/data/sequence/'+sequence.length.to_s, 'w+')
-file.write sequence
-file.close
-file = File.open(Dir.getwd+'/data/spectrum/'+spectrum.size.to_s, 'w+')
-file.write spectrum.join("\n")
-file.close
+# file = File.open('sequence/'+sequence.length.to_s, 'w')
+# file.write sequence
+# file.close
+# file = File.open(Dir.getwd+'/data/spectrum/'+spectrum.size.to_s, 'w')
+# file.write spectrum.join("\n")
+# file.close
+puts spectrum.size
+puts sequence.length
 
-puts spectrum.inspect
-  #puts "Sekwencja dlugosc: #{sequence.length} i ilosc wierzcholkow: #{spectrum.length}" if sequence.length == 80
