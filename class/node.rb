@@ -18,6 +18,10 @@ class Node
     self.visited += 1
   end
 
+  def decrement_visited
+    self.visited -= 1
+  end
+
   def increment_repetitions
     self.repetitions += 1
   end
@@ -56,4 +60,41 @@ class Node
       return false
     end
   end
+
+  def error?
+    if repetitions == 0 && visited != 0
+      return true
+    elsif repetitions == 1 && visited != 1
+      return true
+    elsif (repetitions == 2 || repetitions == 3) && (visited != 2 && visited != 3)
+      return true
+    elsif (repetitions == 4 || repetitions == 5) && (visited != 4 && visited != 5)
+      return true
+    elsif repetitions > 5 && visited <= 5
+      return true
+    else
+      return false
+    end
+  end
+
+  def min_left
+    left = 0
+    if self.visited < self.repetitions
+      if self.repetitions == 2 || self.repetitions == 3
+        left = 1 - self.visited
+      elsif self.repetitions == 4 || self.repetitions == 5
+        left = 2 - self.visited
+      elsif self.repetitions > 5
+        left = 4 - self.visited
+      end
+    end
+    if left > 1
+       return left
+    elsif left <= 0
+      return 0
+    else
+      return left
+    end
+  end
+
 end
