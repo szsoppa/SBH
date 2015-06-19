@@ -5,7 +5,7 @@ $ANT_LOOP = 10000
 
 class Graph
   include Algorithm
-  attr_accessor :nodes, :n, :l, :start_node
+  attr_accessor :nodes, :n, :l, :start_node, :searched_sequence
 
   def initialize
     self.nodes = Hash.new
@@ -31,6 +31,7 @@ class Graph
         line.delete!("\n")
         self.n = line.length
         self.start_node = line[0..self.l-1]
+        self.searched_sequence = line
       end
     end
   end
@@ -65,15 +66,7 @@ class Graph
     best_score = 10000
     for i in (1..$ANT_LOOP) do
       x = greedy(nodes, self.start_node, self.n)
-      sequence = ''
-      x.each do |oligo|
-        if sequence.length == 0
-          sequence += oligo
-          next
-        end
-        match = get_match(sequence[sequence.length-self.l..-1], oligo)
-        sequence += oligo[match..-1]
-      end
+      sequence = append_oligo(x)
       if sequence != ''
         score = 0
         x.each{|oligo| score += (nodes[oligo].repetitions - nodes[oligo].visited)}
@@ -82,13 +75,26 @@ class Graph
           best_sequence = sequence
         end
       end
-      #puts sequence if sequence != ''
+      puts x.size
       self.nodes.each { |key, value| value.visited = 0 }
     end
-    best_sequence
+    best_sequence if best_sequence == self.searched_sequence
   end
 
   private
+
+  def append_oligo(x)
+    sequence = ''
+    x.each do |oligo|
+      if sequence.length == 0
+        sequence += oligo
+        next
+      end
+      match = get_match(sequence[sequence.length-self.l..-1], oligo)
+      sequence += oligo[match..-1]
+    end
+    sequence
+  end
 
   def assign_node(code)
     if nodes.has_key?(code)
