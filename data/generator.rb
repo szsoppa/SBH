@@ -130,12 +130,11 @@ spectrum = generate_sequence(sequence, spectrum)
 spectrum.shuffle!
 
 sequence = sequence.join('')
-# file = File.open('sequence/'+sequence.length.to_s, 'w')
-# file.write sequence
-# file.close
-# file = File.open(Dir.getwd+'/data/spectrum/'+spectrum.size.to_s, 'w')
-# file.write spectrum.join("\n")
-# file.close
+file = File.open('./sequence/'+sequence.length.to_s, 'w+')
+file.write sequence
+file.close
+file = File.open('./spectrum/'+spectrum.size.to_s, 'w+')
+file.write spectrum.join("\n")
+file.close
 puts spectrum.size
 puts sequence.length
-
