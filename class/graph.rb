@@ -55,7 +55,7 @@ class Graph
 
   def show
     self.nodes.each do |key, value|
-      print "#{value.code}: "
+      print "#{value.code}(rep:#{value.repetitions}): "
       value.arcs.each { |v| print "#{v.successor.code}(#{v.weight}) "}
       puts ''
     end
@@ -69,16 +69,15 @@ class Graph
       sequence = append_oligo(x)
       if sequence != ''
         score = 0
-        x.each{|oligo| score += (nodes[oligo].repetitions - nodes[oligo].visited)}
-        if best_score.abs > score.abs
+        x.each{|oligo| score += 1 if nodes[oligo].error?}
+        if best_score > score
           best_score = score
           best_sequence = sequence
         end
       end
-      puts x.size
       self.nodes.each { |key, value| value.visited = 0 }
     end
-    best_sequence if best_sequence == self.searched_sequence
+    [best_sequence, best_score]
   end
 
   private
