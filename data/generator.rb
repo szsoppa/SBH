@@ -11,9 +11,14 @@ $rand3_seq = [4, 5]
 
 
 
-l = ARGV[0].to_s.to_i # dlugosc nukleotydu w spektrum
-p_errors = ARGV[1].to_s.to_i # liczba bledow pozytywnych
-n_errors = ARGV[2].to_s.to_i # liczba bledow negatywnych
+# l = ARGV[0].to_s.to_i # dlugosc nukleotydu w spektrum
+# p_errors = ARGV[1].to_s.to_i # liczba bledow pozytywnych
+# n_errors = ARGV[2].to_s.to_i # liczba bledow negatywnych
+
+l = 8
+p_errors = 2
+n_errors = 2
+
 
 def get_oligo(l, used_nucleotids)
   oligo = ''
@@ -109,32 +114,51 @@ def generate_sequence(sequence, spectrum)
   spectrum
 end
 
+it = 11
+dl = 48
 
-spectrum = []
-sequence = []
-used_nucleotids = []
-positive_errors = []
-negative_errors = []
-positive_errors = prepare_errors(used_nucleotids, l, p_errors)
-used_nucleotids += positive_errors.collect {|key,val| key}
-negative_errors = prepare_errors(used_nucleotids, l, n_errors)
-positives_sequence = add_to_sequence_positives(positive_errors)
-positives_spectrum = add_to_spectrum_positives(positives_sequence, positive_errors)
-negatives_spectrum = add_to_spectrum_negatives(negative_errors)
-negatives_sequence = add_to_sequence_negatives(negatives_spectrum, negative_errors)
+while true do
+  spectrum = []
+  sequence = []
+  used_nucleotids = []
+  positive_errors = []
+  negative_errors = []
+  positive_errors = prepare_errors(used_nucleotids, l, p_errors)
+  used_nucleotids += positive_errors.collect {|key,val| key}
+  negative_errors = prepare_errors(used_nucleotids, l, n_errors)
+  positives_sequence = add_to_sequence_positives(positive_errors)
+  positives_spectrum = add_to_spectrum_positives(positives_sequence, positive_errors)
+  negatives_spectrum = add_to_spectrum_negatives(negative_errors)
+  negatives_sequence = add_to_sequence_negatives(negatives_spectrum, negative_errors)
 
-sequence = negatives_sequence + positives_sequence
-spectrum = positives_spectrum + negatives_spectrum
-sequence.shuffle!
-spectrum = generate_sequence(sequence, spectrum)
-spectrum.shuffle!
+  sequence = negatives_sequence + positives_sequence
+  spectrum = positives_spectrum + negatives_spectrum
+  sequence.shuffle!
+  spectrum = generate_sequence(sequence, spectrum)
+  spectrum.shuffle!
 
-sequence = sequence.join('')
-file = File.open('./sequence/'+sequence.length.to_s, 'w+')
-file.write sequence
-file.close
-file = File.open('./spectrum/'+spectrum.size.to_s, 'w+')
-file.write spectrum.join("\n")
-file.close
-puts spectrum.size
-puts sequence.length
+  sequence = sequence.join('')
+  #
+  # file = File.open('./sequence/'+sequence.length.to_s, 'w+')
+  # file.write sequence
+  # file.close
+  # file = File.open('./spectrum/'+spectrum.size.to_s, 'w+')
+  # file.write spectrum.join("\n")
+  # file.close
+
+  # if spectrum.size == 12 and sequence.length == 48
+  #   puts "Sequence: #{sequence.length}"
+  #   puts "Spectrum: #{spectrum.size}"
+  #end
+  next if sequence.length != dl or spectrum.size != it
+  file = File.open('./sequence/'+"#{p_errors.to_s}/"+sequence.length.to_s+'_'+spectrum.size.to_s, 'w+')
+  file.write sequence
+  file.close
+  file = File.open('./spectrum/'+"#{p_errors.to_s}/"+spectrum.size.to_s+'_'+spectrum.size.to_s, 'w+')
+  file.write spectrum.join("\n")
+  file.close
+  it += 1
+  break if it == 13
+
+end
+
