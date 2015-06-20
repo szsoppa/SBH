@@ -16,8 +16,8 @@ $rand3_seq = [4, 5]
 # n_errors = ARGV[2].to_s.to_i # liczba bledow negatywnych
 
 l = 8
-p_errors = 2
-n_errors = 2
+p_errors = 4
+n_errors = 4
 
 
 def get_oligo(l, used_nucleotids)
@@ -114,8 +114,8 @@ def generate_sequence(sequence, spectrum)
   spectrum
 end
 
-it = 11
-dl = 48
+it = 23
+dl = 104
 
 while true do
   spectrum = []
@@ -146,10 +146,10 @@ while true do
   # file.write spectrum.join("\n")
   # file.close
 
-  # if spectrum.size == 12 and sequence.length == 48
+  # if spectrum.size == 21 and sequence.length == 96
   #   puts "Sequence: #{sequence.length}"
   #   puts "Spectrum: #{spectrum.size}"
-  #end
+  # end
   next if sequence.length != dl or spectrum.size != it
   file = File.open('./sequence/'+"#{p_errors.to_s}/"+sequence.length.to_s+'_'+spectrum.size.to_s, 'w+')
   file.write sequence
@@ -158,7 +158,7 @@ while true do
   file.write spectrum.join("\n")
   file.close
   it += 1
-  break if it == 13
+  break if it == 25
 
 end
 
